@@ -1,4 +1,3 @@
-
 DELIMITER $$
 CREATE  PROCEDURE `sp_rpt_overall_summaries`(_rpt_code int,_date_form date, _date_to date)
 BEGIN 
@@ -151,12 +150,10 @@ BEGIN
 			WHERE anim.reg_date BETWEEN _date_form AND _date_to
 			GROUP BY anim.country_id, anim.animal_type ;
             
-			INSERT INTO temp_farm_count (country_id,grand_total,uuid) 
-            SELECT a.country_id,count(a.farm_id),@uuid FROM (             
-				SELECT distinct animal.country_id, animal.farm_id							
-				FROM core_animal animal 
-				WHERE reg_date BETWEEN _date_form AND _date_to
-            ) a GROUP BY a.country_id;  
+            INSERT INTO temp_farm_count (country_id,grand_total,uuid) 
+            SELECT country_id,count(id),@uuid 
+            FROM core_farm   
+            WHERE reg_date BETWEEN _date_form AND _date_to GROUP BY country_id;   
         
         END IF;
         
